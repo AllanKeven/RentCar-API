@@ -1,64 +1,98 @@
 const express = require('express')
+const { PrismaClient } = require('./generated/prisma')
 const app = express()
 const port = 3001;
 
-
 const cors = require('cors');
 
+
+const prisma = new PrismaClient();
 app.use(express.json())
 app.use(cors());
 
-let cars = []
 
-app.get('/cars', (req, res) => {
-  //ira retorar uma lista de carros com status 200s
+app.get('/cars', async (req, res) => {
+  const allCars = await prisma.car.findMany();
 
-  res.status(200).json(cars)
+
+  res.status(200).json(allCars)
 })
 
-app.post('/cars', (req, res) => {
+app.post('/cars', async (req, res) => {
 
   const { name, price, category, transmission, fuel, seats, image, avaliable } = req.body
 
+  try {
+    const newcar = await prisma.car.create({
+      data: {
+        name,
+        price,
+        category,
+        transmission,
+        fuel,
+        seats,
+        image,
+        avaliable
+      }
+    })
+    res.status(201).send('Anuncio criado com suceso ' + newcar)
 
-  console.log(req.body)
-  const car = {
-    name,
-    category,
-    seats,
-    price,
-    transmission,
-    fuel,
-    image,
-    avaliable
-
+  } catch (error) {
+    console.error(error)
   }
-  cars.push(car)
-  res.status(201).json(car)
+
+
+
 });
 
-app.put('/cars', (req, res) => {
-
-  
+app.put('/cars/:id', async (req, res) => {
+  const { id } = req.params;
   const { name, price, category, transmission, fuel, seats, image, avaliable } = req.body;
 
-  const newcar = {
-    name,
-    category,
-    seats,
-    price,
-    transmission,
-    fuel,
-    image,
-    avaliable
+  try {
+    const updateCar = await prisma.car.update({
+      where: {
+        id: id
+      },
+      data: {
+        name,
+        price,
+        category,
+        transmission,
+        fuel,
+        seats,
+        image,
+        avaliable
+      }
+    });
 
+    res.status(200).json(updateCar);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erro ao atualizar o carro' });
   }
 
-  car.put(newcar);
-  res.status(200).json(newcar);
+});
+
+
+app.delete('/cars/:id', async(req,res)=>{
+
+  const id = req.params.id
+
+  try {
+    const deletedCar = await prisma.car.delete({
+      where:{
+        id:id
+      }
+
+    })
+
+    res.status(200).json(deletedCar);
+  } catch (error) {
+    res.status(404).json({error: "Car not found"})
+  }
+
 })
-
-
 
 
 
