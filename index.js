@@ -77,7 +77,7 @@ app.put('/cars/:id', async (req, res) => {
 
 app.delete('/cars/:id', async(req,res)=>{
 
-  const id = req.params.id
+  const {id} = req.params
 
   try {
     const deletedCar = await prisma.car.delete({
