@@ -4,6 +4,7 @@ const Sentry = require("@sentry/node");
 const express = require('express');
 const { PrismaClient } = require('./generated/prisma')
 const app = express();
+const routes = require('./routes/index.routes');
 const port = 3001;
 
 const cors = require('cors');
@@ -13,6 +14,7 @@ const cors = require('cors');
 const prisma = new PrismaClient();
 app.use(express.json())
 app.use(cors());
+app.unsubscribe('/api',routes);
 
 
 app.get('/cars', async (req, res) => {
