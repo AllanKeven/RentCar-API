@@ -1,9 +1,13 @@
-const express = require('express')
+require("./instrument");
+
+const Sentry = require("@sentry/node");
+const express = require('express');
 const { PrismaClient } = require('./generated/prisma')
-const app = express()
+const app = express();
 const port = 3001;
 
 const cors = require('cors');
+
 
 
 const prisma = new PrismaClient();
@@ -75,25 +79,35 @@ app.put('/cars/:id', async (req, res) => {
 });
 
 
-app.delete('/cars/:id', async(req,res)=>{
+app.delete('/cars/:id', async (req, res) => {
 
-  const {id} = req.params
+  const { id } = req.params
 
   try {
     const deletedCar = await prisma.car.delete({
-      where:{
-        id:id
+      where: {
+        id: id
       }
 
     })
 
     res.status(200).json(deletedCar);
   } catch (error) {
-    res.status(404).json({error: "Car not found"})
+    res.status(404).json({ error: "Car not found" })
   }
 
 })
 
+/*
+  EXEMPLO DO ERRO DO SENTRY
+
+app.get("/debug-sentry", function mainHandler(req, res) {
+  throw new Error("My first Sentry error!");
+});
+  
+*/
+
+Sentry.setupExpressErrorHandler(app);
 
 
 app.listen(port, () => {
