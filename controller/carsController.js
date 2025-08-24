@@ -39,6 +39,7 @@ class carsController {
     }
 
     async updatecar(req, res) {
+        const {id} = req.params;
         try {
             const updateCar = await prisma.car.update({
                 where: {
@@ -83,12 +84,6 @@ class carsController {
             throw new Error(error);
         }
     }
-
-
-
-
-
-
 
 
 
