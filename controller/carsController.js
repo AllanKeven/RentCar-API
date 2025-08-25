@@ -1,8 +1,28 @@
 const { PrismaClient } = require('../generated/prisma');
+const email = require('@sendgrid/mail');
+
+
+email.setApiKey(process.env.Send_Gri_API);
 
 const prisma = new PrismaClient();
 
 class carsController {
+
+    async sendEmail(req, res) {
+        const emailContent = {
+            to: 'alencarmesquitaallankeven@gmail.com',
+            from: 'alkeven007@gmail.com',
+            subject: 'Sending an email using SendGrid',
+            text: 'Hello from SendGrid!',
+        };
+        try {
+            await email.send(emailContent)
+                res.status(200).json({message:"Email Criado com sucesso"});
+        } catch (error) {
+            res.status(500).json({error: 'Erro ao enviar email!'})
+        }
+
+    }
 
     async registerCar(req, res) {
         try {
@@ -39,7 +59,7 @@ class carsController {
     }
 
     async updatecar(req, res) {
-        const {id} = req.params;
+        const { id } = req.params;
         try {
             const updateCar = await prisma.car.update({
                 where: {
@@ -80,7 +100,7 @@ class carsController {
 
             res.status(200).json(deletedCar);
         } catch (error) {
-            res.status(404).json("Car not found" );
+            res.status(404).json("Car not found");
             throw new Error(error);
         }
     }

@@ -1,5 +1,6 @@
 require("./instrument");
 
+
 const Sentry = require("@sentry/node");
 const express = require('express');
 const { PrismaClient } = require('./generated/prisma')
@@ -11,13 +12,9 @@ const cors = require('cors');
 
 
 
-const prisma = new PrismaClient();
 app.use(express.json())
 app.use(cors());
-app.use('/api',routes);
-
-
-
+app.use('/api', routes);
 
 /*
   EXEMPLO DO ERRO DO SENTRY
