@@ -23,7 +23,7 @@ model Car {
   transmission String
   fuel         String
   image        String
-  avaliable    Boolean @default(false)
+  available    Boolean @default(false)
 }
 
 model User{
