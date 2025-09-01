@@ -1,4 +1,5 @@
 require("./instrument");
+require('dotenv').config();
 
 
 const Sentry = require("@sentry/node");

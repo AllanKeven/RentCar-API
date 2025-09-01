@@ -1,6 +1,7 @@
 const { PrismaClient } = require('../generated/prisma');
 const email = require('@sendgrid/mail');
 const { Rent_confirmation_template } = require('../utils/constants');
+require('dotenv').config();
 
 
 
