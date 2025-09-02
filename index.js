@@ -1,10 +1,12 @@
 require("./instrument");
 require('dotenv').config();
 
+const swaggerUi = require('swagger-ui-express');
+const swaggerFile = require('./swagger-output.json');
+const bodyParser = require('body-parser');
 
 const Sentry = require("@sentry/node");
 const express = require('express');
-const { PrismaClient } = require('./generated/prisma')
 const app = express();
 const routes = require('./routes/index.routes');
 const port = 3001;
@@ -12,8 +14,9 @@ const port = 3001;
 const cors = require('cors');
 
 
-
-app.use(express.json())
+app.use(bodyParser.json());
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
+app.use(express.json());
 app.use(cors());
 app.use('/api', routes);
 
@@ -32,3 +35,4 @@ Sentry.setupExpressErrorHandler(app);
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
+

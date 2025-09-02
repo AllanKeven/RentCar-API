@@ -1,7 +1,8 @@
 const { PrismaClient } = require('../generated/prisma');
-const prisma = new PrismaClient();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+
+const prisma = new PrismaClient();
 
 class userController {
     async register(req, res) {
